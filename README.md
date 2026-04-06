@@ -3,8 +3,8 @@ This repository provides an example of how you can combine NGINX, ModSecurity, O
 #  NGINX + MODSECURITY + OWASP CRS + WAZUH INTEGRATION #
 
 # ModSecurity Installation:
-<pre> ```bash apt update ``` </pre>
-<pre> ```bash apt install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev ``` </pre>
+<pre>apt update </pre>
+<pre> apt install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev </pre>
 
 $ sudo apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev
 $  git clone https://github.com/owasp-modsecurity/ModSecurity
