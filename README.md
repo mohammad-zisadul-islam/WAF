@@ -246,7 +246,7 @@ setvar:tx.detection_paranoia_level=1"  *
 
 # Add: 
 
-* error_page 403 /custom_403.html;
+*error_page 403 /custom_403.html;
 error_page 404 /custom_404.html;
 error_page 500 502 503 504 /custom_50x.html;
 
@@ -263,7 +263,7 @@ internal;
 location = /custom_50x.html {
 root /var/www/errors;
 internal;
-} *
+}*
 
 
 
@@ -275,7 +275,7 @@ internal;
 
 # Add : 
 
-* <!DOCTYPE html>
+*<!DOCTYPE html>
 <html>
 <head>
 <title>Forbidden</title>
@@ -284,7 +284,7 @@ internal;
 <h1>403 Forbidden</h1>
 <p>Access denied.</p>
 </body>
-</html> * 
+</html>*
 
 
 
