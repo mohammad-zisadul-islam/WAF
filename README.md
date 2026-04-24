@@ -275,12 +275,15 @@ systemctl restart wazuh-agent
 #### 8 Testing
 
 - SQLi
+
 ```curl "http://192.168.33.140/?id=1 OR 1=1"```
 
-- XSS 
+- XSS
+ 
 ```curl "http://192.168.33.140/?q=<script>alert(1)</script>"```
 
 - LFI
+
 ```curl "http://192.168.33.140/?file=../../../../etc/passwd"```
 
 #### All chack is "OK"  {Test the Machin} 
