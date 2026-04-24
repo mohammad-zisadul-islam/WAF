@@ -383,10 +383,15 @@ for i in {1..50}; do curl http://IP/?id=1%20OR%201=1; done
 #### 12 Manully Log chack
 
 ``` sudo tail -f /var/log/nginx/error.log```
+
 ```sudo tail -f /var/log/nginx/access.log```
+
 ```sudo tail -f /var/log/modsecurity/audit.log```
+
 ```sudo tail -f /var/log/nginx/access.log | grep 403```
+
 ```sudo less /var/log/nginx/error.log```
+
 ```sudo tail -f /var/log/nginx/error.log /var/log/modsec_audit.log```
 
 
