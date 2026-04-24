@@ -1,136 +1,190 @@
 # WAF-SIEM-Integration-Lab
 
+- `Creat by mohammad zisadul islam`
+- `Update : 21/02/2026`
+- `IDS&IPS Setup and integration with wazuh`
 
-Here, one gets to see how a complete WAF solution can be deployed with NGINX, ModSecurity, OWASP CRS, and Wazuh integration. Here you get to know about the whole process of setting up, configuring, monitoring logs and performing tests by simulating real-world web attacks.
+<p>
+Here, one gets to see how a complete WAF solution can be deployed with NGINX, ModSecurity, OWASP CRS, and Wazuh integration. Here you get to know about the whole process of setting up, configuring, monitoring logs and performing tests by simulating real-world web attacks. This is a demonstration of how we detect, stop and analyze web attacks with WAF rules and SIEM monitoring. This is aimed at security professionals who need experience in cybersecurity and WAF. This is an end-to-end implementation exercise. Educational purpose only.
+</p>
 
-This is a demonstration of how we detect, stop and analyze web attacks with WAF rules and SIEM monitoring. This is aimed at security professionals who need experience in cybersecurity and WAF.
+##  Working in NGINX + MODSECURITY + OWASP CRS + WAZUH INTEGRATION
 
-This is an end-to-end implementation exercise. Educational purpose only.
-
-
-#  NGINX + MODSECURITY + OWASP CRS + WAZUH INTEGRATION #
-
-This section contains instructions on how to install ModSecurity, which is an open source Web Application Firewall (WAF). This is used to protect websites from attacks using various techniques. The process involves setting up dependencies, installing ModSecurity, configuring ModSecurity, and integrating it into different servers such as NGINX and Apache.
-
-
-# 1 ModSecurity Installation:
-
-<pre> $ apt update </pre>
-<pre> $ apt install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev </pre>
-
-<pre> $ sudo apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev </pre>
-<pre> $  git clone https://github.com/owasp-modsecurity/ModSecurity </pre>
-<pre> $  cd ModSecurity/ </pre>
-<pre> $  git submodule init </pre>
-<pre> $  git submodule update </pre>
-<pre> $  sh build.sh </pre>
-<pre> $  ./configure --with-pcre2 </pre>
-<pre> $  make </pre>
-<pre> $  make install </pre>
-
-<pre> $ cp /path/to/ModSecurity/modsecurity.conf-recommended /usr/local/modsecurity/modsecurity.conf </pre>
-<pre> $ cp /path/to/ModSecurity/unicode.mapping /usr/local/modsecurity/unicode.mapping </pre>
+*This section contains instructions on how to install ModSecurity, which is an open source Web Application Firewall (WAF). This is used to protect websites from attacks using various techniques. The process involves setting up dependencies, installing ModSecurity, configuring ModSecurity, and integrating it into different servers such as NGINX and Apache.*
 
 
-# File parth : 
-<pre> $ sudo nano /usr/local/modsecurity/modsecurity.conf </pre>
+### 1 ModSecurity Installation:
+
+```
+apt update
+```
+```
+apt install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev
+```
+```
+sudo apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev
+```
+```
+git clone https://github.com/owasp-modsecurity/ModSecurity
+```
+```
+cd ModSecurity/
+```
+```
+git submodule init
+```
+```
+git submodule update
+```
+```
+sh build.sh
+```
+```
+./configure --with-pcre2
+```
+```
+make
+```
+```
+make install
+```
+
+```
+cp /path/to/ModSecurity/modsecurity.conf-recommended /usr/local/modsecurity/modsecurity.conf
+```
+```
+cp /path/to/ModSecurity/unicode.mapping /usr/local/modsecurity/unicode.mapping
+```
 
 
-# 2 Installation Nginx 
-
-This section provides a step-by-step guide to installing Nginx, a high-performance web server and reverse proxy. It covers package installation, basic configuration, and service management. Useful for beginners and professionals setting up secure and efficient web servers. For educational purposes only.
-
-
-* Install ModSecurity for Nginx
-
-<pre> $ apt update </pre>
-<pre> $ apt install libmodsecurity3 libmodsecurity-dev </pre>
-<pre> $ apt install nginx </pre>
-<pre> $ apt install nginx-module-modsecurity </pre>
+### File parth 
+```
+sudo nano /usr/local/modsecurity/modsecurity.conf
+```
 
 
-# Addet file parth on top bottom 
-* File Parth 
-<pre> $ nano /etc/nginx/nginx.conf </pre>
-* Add : 
-<pre> $ load_module modules/ngx_http_modsecurity_module.so; </pre>
+### 2 Installation Nginx 
 
-# Enable ModSecurity in Nginx:  Inside http {} block add:
-* modsecurity on;
-* modsecurity_rules_file /etc/nginx/modsec/main.conf;
+`This section provides a step-by-step guide to installing Nginx, a high-performance web server and reverse proxy. It covers package installation, basic configuration, and service management. Useful for beginners and professionals setting up secure and efficient web servers. For educational purposes only.`
 
 
-# 3 Create ModSecurity Base Config: 
+#### Install ModSecurity for Nginx
 
-<pre> $  sudo mkdir -p /etc/nginx/modsec </pre>
-<pre> $ /etc/nginx/modsec/modsecurity-base.conf </pre>
+```
+apt update
+```
+```
+apt install libmodsecurity3 libmodsecurity-dev
+```
+```
+apt install nginx
+ ```
+```
+apt install nginx-module-modsecurity
+ ```
 
-# Configure fiel addite : 
-All in one file parth /modsecurity-base.conf
+## Addet file parth on top bottom 
+-  File Parth
 
-* SecRuleEngine On
-* SecRequestBodyAccess On
-* SecAuditEngine RelevantOnly
-* SecAuditLog /var/log/modsecurity/audit.log
-* SecAuditLogParts ABIJDEFHZ (no addite )
+```
+nano /etc/nginx/nginx.conf
+```
+##### Add
+```
+load_module modules/ngx_http_modsecurity_module.so;
+```
 
-
-
-# 4 Install OWASP CRS:
-
-<pre> $ cd /opt </pre>
-<pre> $ git clone https://github.com/coreruleset/coreruleset.git </pre>
-<pre> $ mv coreruleset /opt/coreruleset </pre>
-<pre> $ cp /opt/coreruleset/crs-setup.conf.example /opt/coreruleset/crs-setup.conf </pre>
-
-
-# Create Main ModSecurity Rule Loader:
-
-<pre> $ nano  /etc/nginx/modsec/main.conf </pre>
-
-# Addet in rules file:
-
- All in one Rules 
-* Include /etc/nginx/modsec/modsecurity-base.conf
-* Include /opt/coreruleset/crs-setup.conf
-* Include /opt/coreruleset/rules/*.conf
-
-# 5 Fix SecDefaultAction Error
-
-SecDefaultActions can only be placed once per phase
-
-<pre> $ grep -n SecDefaultAction /opt/coreruleset/crs-setup.conf </pre>
-
-# Addet and addite this parth 
-That is Rules 
-
-* SecDefaultAction "phase:1,log,auditlog,pass"
-* SecDefaultAction "phase:2,log,auditlog,pass"
-
-  # 6 Enable Blocking Mode:
-<pre> $ /etc/nginx/modsec/modsecurity-base.conf </pre>
-
-ON tihis Secctuion 
-
-* SecRuleEngine On
-
-  # Chack status and test for nginx 2.28.4v
-<pre> $ nginx -t </pre>
-<pre> $ systemctl reload nginx </pre>
+##### Enable ModSecurity in Nginx:  Inside http {} block add:
+`- modsecurity on;`
+`-modsecurity_rules_file /etc/nginx/modsec/main.conf;`
 
 
+### 3 Create ModSecurity Base Config
 
-  # 6 Test WAF Blocking:
-<pre> $ curl http://Your IP/ </pre>
-<pre> $ curl "http://192.168.3.1/?id=1%20OR%201=1" </pre>
+```
+sudo mkdir -p /etc/nginx/modsec
+```
+```
+/etc/nginx/modsec/modsecurity-base.conf
+```
 
-  # Check audit log::
-<pre> $ tail -f /var/log/modsecurity/audit.log </pre>
+### Configure fiel addite
+`All in one file parth /modsecurity-base.conf`
+```
+ SecRuleEngine On
+ SecRequestBodyAccess On
+ SecAuditEngine RelevantOnly
+ SecAuditLog /var/log/modsecurity/audit.log
+ SecAuditLogParts ABIJDEFHZ (no addite )
+```
 
-  # Fix Paranoia Level:
-<pre> $  /opt/coreruleset/crs-setup.conf </pre>
-# Uncomment and set:
-* SecAction \
+
+### 4 Install OWASP CRS
+```
+cd /opt
+git clone https://github.com/coreruleset/coreruleset.git
+mv coreruleset /opt/coreruleset
+cp /opt/coreruleset/crs-setup.conf.example /opt/coreruleset/crs-setup.conf
+```
+
+### Create Main ModSecurity Rule Loader
+
+```
+nano  /etc/nginx/modsec/main.conf
+```
+
+### Addet in rules file
+
+`All in one Rules `
+
+```
+ Include /etc/nginx/modsec/modsecurity-base.conf
+ Include /opt/coreruleset/crs-setup.conf
+ Include /opt/coreruleset/rules/*.conf
+```
+
+### 5 Fix SecDefaultAction Error
+
+```SecDefaultActions can only be placed once per phase```
+
+```grep -n SecDefaultAction /opt/coreruleset/crs-setup.conf```
+
+### Addet and addite this parth 
+- That is Rules 
+```
+SecDefaultAction "phase:1,log,auditlog,pass"
+SecDefaultAction "phase:2,log,auditlog,pass"
+```
+
+
+### 6 Enable Blocking Mode
+```/etc/nginx/modsec/modsecurity-base.conf```
+
+*ON tihis Secctuion*
+
+`SecRuleEngine On`
+
+  ### Chack status and test for nginx 2.28.4v
+```
+nginx -t
+systemctl reload nginx
+```
+
+
+
+  ##### 6 Test WAF Blocking with Tarminal
+```curl http://Your IP/```
+```curl "http://192.168.3.1/?id=1%20OR%201=1"```
+
+##### Check audit log
+```tail -f /var/log/modsecurity/audit.log```
+
+##### Fix Paranoia Level
+```/opt/coreruleset/crs-setup.conf```
+
+- *Uncomment and set*
+```
+SecAction \
 "id:900000,\
 phase:1,\
 pass,\
@@ -144,45 +198,50 @@ phase:1,\
 pass,\
 t:none,\
 nolog,\
-setvar:tx.detection_paranoia_level=1"  *
+setvar:tx.detection_paranoia_level=1"
+```
 
-  # Add audit.log to Wazuh agent:
+#### Add audit.log to Wazuh agent
 
-<pre> $ nano /var/ossec/etc/ossec.conf </pre>
+```nano /var/ossec/etc/ossec.conf```
 
-  # Add inside <ossec_config>:
+##### Add inside <ossec_config>
 
+```
 <localfile>
  <log_format>syslog</log_format>
  <location>/var/log/modsecurity/audit.log</location>
 </localfile>
+```
 
+- *Permission*
+```
+chown root:wazuh /var/log/modsecurity/audit.log
+chmod 640 /var/log/modsecurity/audit.log
+systemctl restart wazuh-agent
+```
 
-  # Permission
-<pre> $ chown root:wazuh /var/log/modsecurity/audit.log </pre>
-<pre> $ chmod 640 /var/log/modsecurity/audit.log </pre>
-<pre> $ systemctl restart wazuh-agent </pre>
+#### Chack log
+```grep modsecurity /var/ossec/logs/ossec.log```
 
-  # Chack log
-<pre> $ grep modsecurity /var/ossec/logs/ossec.log </pre>
+## 7 Create Custom Decoder (Manager Side)
 
-# 7 Create Custom Decoder (Manager Side)
+```nano /var/ossec/etc/decoders/local_decoder.xml```
 
-<pre> $ nano /var/ossec/etc/decoders/local_decoder.xml </pre>
+- *Add*
 
-
-   # Add:
+```
 <decoder name="modsecurity">
  <prematch>ModSecurity:</prematch>
 </decoder>
+```
 
+- <p>Create Custom Rules (Attack Classification)</p>
 
-  # Create Custom Rules (Attack Classification)
+```nano /var/ossec/etc/rules/local_rules.xml```
 
-<pre> $ nano /var/ossec/etc/rules/local_rules.xml </pre>
-
-  # List site addet rules : 
-
+  #### List site addet rules
+```
 <group name="modsecurity,web,">
 
   <rule id="110100" level="15">
@@ -209,44 +268,46 @@ setvar:tx.detection_paranoia_level=1"  *
   </rule>
 
 </group>
+```
+*Restart Your Server*
+```systemctl restart wazuh-manager```
 
+#### 8 Testing
 
-<pre> $ systemctl restart wazuh-manager </pre>
+- SQLi
+```curl "http://192.168.33.140/?id=1 OR 1=1"```
 
-# 8 Testing
+- XSS 
+```curl "http://192.168.33.140/?q=<script>alert(1)</script>"```
 
-# SQLi
-<pre> $ curl "http://192.168.33.140/?id=1 OR 1=1" </pre>
+- LFI
+```curl "http://192.168.33.140/?file=../../../../etc/passwd"```
 
-# XSS 
-<pre> $ curl "http://192.168.33.140/?q=<script>alert(1)</script>" </pre>
+#### All chack is "OK"  {Test the Machin} 
+```
+grep "rules loaded" /var/log/nginx/error.log
+grep SecRuleEngine /etc/nginx/modsec/modsecurity-base.conf
+grep SecRuleEngine /etc/nginx/modsec/modsecurity-base.conf
 
-# LFI
-<pre> $ curl "http://192.168.33.140/?file=../../../../etc/passwd" </pre>
+```
 
-# All chack is "OK" [ Test the machin ]
-<pre> $ grep "rules loaded" /var/log/nginx/error.log </pre>
-<pre> $ grep SecRuleEngine /etc/nginx/modsec/modsecurity-base.conf </pre>
-<pre> $ grep SecRuleEngine /etc/nginx/modsec/modsecurity-base.conf </pre>
+### 9 CRS rules file parth
 
+```nano /opt/coreruleset/crs-setup.conf```
+```sudo find / -type f -name "crs-setup.conf*" 2>/dev/null```
 
-# 9 CRS rules file parth : 
+####  Addtable file 
 
-<pre> $ nano /opt/coreruleset/crs-setup.conf </pre>
-<pre> $ sudo find / -type f -name "crs-setup.conf*" 2>/dev/null </pre>
+```nano /etc/nginx/nginx.conf```
+```nano /usr/local/modsecurity/modsecurity.conf```
 
-#  Addtable file 
+- Nginx variation hiding contest 
 
-<pre> $ nano /etc/nginx/nginx.conf </pre>
-<pre> $ nano /usr/local/modsecurity/modsecurity.conf </pre>
+``` nano /etc/nginx/sites-available/default```
 
-# Nginx variation hiding contest 
-
-<pre> $ nano /etc/nginx/sites-available/default </pre>
-
-# Add: 
-
-*error_page 403 /custom_403.html;
+`Add`
+```
+error_page 403 /custom_403.html;
 error_page 404 /custom_404.html;
 error_page 500 502 503 504 /custom_50x.html;
 
@@ -263,19 +324,22 @@ internal;
 location = /custom_50x.html {
 root /var/www/errors;
 internal;
-}*
+}
+```
 
 
 
-# 10 Adite file : 
+### 10 Adite file
 
-# Cerat a file parth 
-<pre> $ sudo mkdir -p /var/www/errors </pre>
-<pre> $ sudo nano /var/www/errors/custom_403.html </pre>
+- Cerat a file parth
+```
+sudo mkdir -p /var/www/errors
+sudo nano /var/www/errors/custom_403.html
+```
 
-# Add : 
-
-*<!DOCTYPE html>
+- Add  
+```
+<!DOCTYPE html>
 <html>
 <head>
 <title>Forbidden</title>
@@ -284,41 +348,43 @@ internal;
 <h1>403 Forbidden</h1>
 <p>Access denied.</p>
 </body>
-</html>*
+</html>
+```
 
 
 
-# 11 Save and  restart nginx server and test this server 
+### 11 Save and  restart nginx server and test this server 
 
-<pre> $ nikto -h http://IP </pre>
-<pre> $ sqlmap -u "http://192.168.33.140/?id=1" --batch 
-for i in {1..50}; do curl http://IP/?id=1%20OR%201=1; done </pre>
-
-
-# Browser Testing For blocking Attack 
-
-# Sql injection 
-<pre> $ www.exmapole.com/?id=1 OR 1=1 </pre>
-
-# Xss attack: 
-<pre> ?q=<script>alert(1)</script> </pre>
-
-# LFI attack : 
-<pre> ?q=<script>alert(1)</script> </pre>
+```nikto -h http://IP```
+```
+sqlmap -u "http://192.168.33.140/?id=1" --batch
+for i in {1..50}; do curl http://IP/?id=1%20OR%201=1; done
+```
 
 
-# DDoS Attack: 
-<pre> $ hping3 -S –flood -p 80 192.168.33140 </pre>
+#### Browser Testing For blocking Attack 
 
-# 12 Manully Log chack : 
+- Sql injection 
+```www.exmapole.com/?id=1 OR 1=1```
 
-<pre> $ sudo tail -f /var/log/nginx/error.log </pre>
-<pre> $ sudo tail -f /var/log/nginx/access.log </pre>
-<pre> $ sudo tail -f /var/log/modsecurity/audit.log </pre>
+- Xss attack 
+```?q=<script>alert(1)</script>```
 
-<pre> $ sudo tail -f /var/log/nginx/access.log | grep 403 </pre>
-<pre> $ sudo less /var/log/nginx/error.log </pre>
-<pre> $ sudo tail -f /var/log/nginx/error.log /var/log/modsec_audit.log </pre>
+- LFI attack
+```?q=<script>alert(1)</script>```
+
+
+- DDoS Attack 
+```hping3 -S –flood -p 80 192.168.33140```
+
+#### 12 Manully Log chack
+
+``` sudo tail -f /var/log/nginx/error.log```
+```sudo tail -f /var/log/nginx/access.log```
+```sudo tail -f /var/log/modsecurity/audit.log```
+```sudo tail -f /var/log/nginx/access.log | grep 403```
+```sudo less /var/log/nginx/error.log```
+```sudo tail -f /var/log/nginx/error.log /var/log/modsec_audit.log```
 
 
 
